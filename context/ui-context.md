@@ -1,105 +1,357 @@
 # UI Context
 
+## Visual Identity
+
+The visual language of the website is:
+
+- Premium
+- Aggressive
+- Modern
+
+The design should feel like a serious professional MMA organization while maintaining its own visual identity.
+
+The interface should avoid looking like a generic sports website, gaming interface, or direct clone of an existing MMA promotion.
+
+The design should prioritize:
+
+- Strong visual hierarchy
+- Large and confident typography
+- High-quality fighter and event imagery
+- Clean layouts
+- Generous negative space
+- High contrast
+- Controlled use of accent color
+- Subtle and purposeful motion
+
 ## Theme
 
-Dark only. No light mode. The visual language is a dark technical workspace — near-black backgrounds, layered surfaces, and vivid accent colors for interactive elements.
+The application supports both dark and light modes.
 
-All colors are defined as CSS custom properties in `globals.css` and mapped to Tailwind tokens via `@theme inline`. Components must use these tokens — no hardcoded hex values or raw Tailwind color classes like `zinc-*`.
+Dark mode is the default theme.
 
-| Role             | CSS Variable           | Hex / Value               |
-| ---------------- | ---------------------- | ------------------------- |
-| Page background  | `--bg-base`            | `#080809`                 |
-| Surface          | `--bg-surface`         | `#111114`                 |
-| Elevated surface | `--bg-elevated`        | `#18181c`                 |
-| Subtle surface   | `--bg-subtle`          | `#1e1e23`                 |
-| Default border   | `--border-default`     | `#2a2a30`                 |
-| Subtle border    | `--border-subtle`      | `#3a3a42`                 |
-| Primary text     | `--text-primary`       | `#f0f0f4`                 |
-| Secondary text   | `--text-secondary`     | `#c0c0cc`                 |
-| Muted text       | `--text-muted`         | `#808090`                 |
-| Faint text       | `--text-faint`         | `#505060`                 |
-| Brand accent     | `--accent-primary`     | `#00c8d4` (cyan)          |
-| Brand dim        | `--accent-primary-dim` | `rgba(0, 200, 212, 0.12)` |
-| AI accent        | `--accent-ai`          | `#6457f9` (indigo-purple) |
-| AI text          | `--accent-ai-text`     | `#8b82ff`                 |
-| Error            | `--state-error`        | `#ff4d4f`                 |
-| Success          | `--state-success`      | `#34d399`                 |
-| Warning          | `--state-warning`      | `#fbbf24`                 |
+Users can switch between dark and light mode using a global theme toggle in the Navbar.
 
-Tailwind utility names map to these variables. Use `bg-base`, `bg-surface`, `text-copy-primary`, `text-copy-muted`, `border-surface-border`, `text-brand`, `bg-accent-dim`, etc.
+Both themes must be designed intentionally. Light mode should not simply be an inverted version of the dark theme.
+
+All theme colors should be defined as CSS custom properties and mapped to Tailwind tokens.
+
+Components must use the defined design tokens rather than hardcoded color values or arbitrary Tailwind color classes.
+
+### Dark Theme
+
+| Role | CSS Variable | Value |
+| ---------------- | ---------------------- | ---------------- |
+| Page background | --bg-base | #080808 |
+| Surface | --bg-surface | #111111 |
+| Elevated surface | --bg-elevated | #171717 |
+| Subtle surface | --bg-subtle | #1d1d1d |
+| Default border | --border-default | #262626 |
+| Subtle border | --border-subtle | #333333 |
+| Primary text | --text-primary | #F5F5F5 |
+| Secondary text | --text-secondary | #A1A1A1 |
+| Muted text | --text-muted | #707070 |
+| Faint text | --text-faint | #4A4A4A |
+| Brand accent | --accent-primary | #E10600 |
+| Brand accent dim | --accent-primary-dim | rgba(225, 6, 0, 0.12) |
+| Error | --state-error | #EF4444 |
+| Success | --state-success | #22C55E |
+| Warning | --state-warning | #F59E0B |
+
+### Light Theme
+
+Light theme uses the same semantic token names as the dark theme.
+
+The exact light-theme values should be defined in globals.css and maintained as a cohesive palette rather than using arbitrary Tailwind colors.
+
+The light theme should preserve:
+
+- Strong contrast
+- Brand red
+- Clear surface hierarchy
+- Subtle borders
+- Premium visual character
+
+## Color Usage
+
+Brand red is an accent, not a dominant background color.
+
+Use the accent primarily for:
+
+- Primary CTAs
+- Active navigation states
+- Active tabs
+- Important indicators
+- Ranking movement
+- Championship indicators
+- Winner states
+- Hover states
+- Selected elements
+- Small visual accents
+
+Do not use the accent color excessively.
+
+The interface should remain predominantly neutral, allowing the red accent to carry visual importance.
 
 ## Typography
 
-| Role      | Font       | CSS Variable        |
-| --------- | ---------- | ------------------- |
-| UI text   | Geist Sans | `--font-geist-sans` |
-| Code/mono | Geist Mono | `--font-geist-mono` |
+Typography should create a strong editorial and sports-oriented visual identity.
 
-Both fonts are loaded via `next/font/google` and applied as CSS variables on the `<html>` element. The base `body` uses Geist Sans with `antialiased`.
+### Display Font
+
+Use Barlow Condensed for large display typography.
+
+Primary usage:
+
+- Hero headings
+- Event names
+- Fighter names
+- Section headings
+- Ranking numbers
+- Major promotional text
+
+### Body Font
+
+Use Inter for general interface and body text.
+
+Primary usage:
+
+- Navigation
+- Descriptions
+- Metadata
+- Buttons
+- Labels
+- Article content
+- Form controls
+- Supporting text
+
+Both fonts should be loaded using next/font/google and exposed as CSS variables.
+
+The base body should use Inter with antialiased.
+
+Typography should use strong weight and size contrast rather than excessive decorative effects.
 
 ## Border Radius
 
-Radius increases with surface depth — smaller for inner elements, larger for outer containers.
+The design uses sharp to slightly rounded surfaces.
 
-| Context           | Class         |
-| ----------------- | ------------- |
-| Inline / small UI | `rounded-xl`  |
-| Cards / panels    | `rounded-2xl` |
-| Modal / overlay   | `rounded-3xl` |
+Avoid excessive use of large rounded containers.
 
-## Canvas
+| Context | Class |
+| ----------------- | ---------------- |
+| Inline / small UI | rounded-md |
+| Buttons / inputs | rounded-md |
+| Cards | rounded-lg |
+| Large panels | rounded-xl |
+| Modal / overlay | rounded-xl |
 
-### Node Color Palette
+Large rounded-2xl or rounded-3xl surfaces should only be used when they have a clear visual purpose.
 
-8 defined color pairs. Each pair specifies a dark node fill and a vivid contrasting text color tuned for readability on the dark canvas. Defined in `types/canvas.ts` as `NODE_COLORS`.
+## Layout
 
-| Node fill | Text color | Character              |
-| --------- | ---------- | ---------------------- |
-| `#1F1F1F` | `#EDEDED`  | Neutral dark (default) |
-| `#10233D` | `#52A8FF`  | Blue                   |
-| `#2E1938` | `#BF7AF0`  | Purple                 |
-| `#331B00` | `#FF990A`  | Orange                 |
-| `#3C1618` | `#FF6166`  | Red                    |
-| `#3A1726` | `#F75F8F`  | Pink                   |
-| `#0F2E18` | `#62C073`  | Green                  |
-| `#062822` | `#0AC7B4`  | Teal                   |
+Layouts should feel spacious, structured, and editorial.
 
-Default node color: `#1F1F1F` with `#EDEDED` text.
+Use:
+- Strong grid systems
+- Consistent content widths
+- Generous vertical spacing
+- Clear section separation
+- Large visual areas for imagery
+- Strong alignment
+- Responsive layouts
 
-### Edge Style
+Avoid:
 
-Smooth-step path with an arrow marker. Default edge color: `#f8fafc`. Stroke width is thin — edges are visually secondary to nodes.
+- Dense dashboard-style layouts
+- Excessive cards
+- Unnecessary borders
+- Excessive visual decoration
+- Large amounts of empty UI chrome
 
-### Node Shapes
+## Homepage Layout
 
-6 supported shapes, defined in `types/canvas.ts` as `NODE_SHAPES`. Complex shapes (diamond, hexagon, cylinder) are rendered as inline SVGs rather than CSS borders.
+The homepage follows this section order:
 
-- `rectangle` — default general-purpose node
-- `diamond` — decision / gateway
-- `circle` — event / endpoint
-- `pill` — service / process
-- `cylinder` — database / storage
-- `hexagon` — external system / boundary
+1. Hero
+2. Recent Results
+3. Pound-for-Pound
+4. Champions
+5. News
 
-### Connection Handles
+The Hero should establish the organization's identity before presenting event information.
 
-Small white circular handles, hidden by default, revealed on node hover. Appear at all four sides of a node.
+The Upcoming Event is presented as part of the Hero experience.
 
-### Canvas Background
+Recent Results use a horizontal carousel.
 
-React Flow `<Background>` component. Canvas sits on the base background color.
+Pound-for-Pound uses a ranking-list presentation rather than individual cards.
 
-## Component Library
+Champions are displayed inside one unified section/container containing all eight divisions.
 
-shadcn/ui on top of Tailwind. No custom design system. Components live in `components/ui/`. Use the `shadcn` CLI to add new components rather than writing them from scratch.
+News uses an animated carousel for popular or featured articles.
 
-## Layout Patterns
+## Navbar
 
-- Editor workspace: full-viewport layout — floating sidebar overlay on the left, center canvas, slide-over AI sidebar on the right.
-- Sidebars: floating overlay with dark semi-transparent background and subtle border.
-- Modals and dialogs: centered overlay, `rounded-3xl`, dark background with backdrop blur.
-- Navbar: top bar with dark background and bottom border.
+The Navbar is a global component displayed on every page.
 
-## Icons
+Desktop structure:
 
-Lucide React. Stroke-based icons only — no filled variants. Icon sizes: `h-4 w-4` for inline, `h-5 w-5` for buttons, `h-8 w-8` for feature icons in empty states.
+`text
+LOGO                    RANKINGS  FIGHTERS  NEWS  EVENTS  ABOUT  CONTACT
+
+The logo is positioned on the left.
+Navigation links are positioned on the right.
+The Navbar includes a global Dark/Light theme toggle.
+On mobile, navigation links collapse into a hamburger menu.
+The Navbar should remain visually minimal and should not contain social media links.
+Footer
+The Footer is a global component displayed on every page.
+It contains:
+Organization logo
+Short organization description
+Navigation links
+Social media links
+Copyright information
+Privacy Policy
+Terms
+Social media platforms:
+Instagram
+X
+YouTube
+Telegram
+Cards
+Cards should support the premium, aggressive, and modern visual language.
+Cards should use:
+Strong imagery
+Clear hierarchy
+Subtle borders
+Controlled shadows
+Slight corner rounding
+Clear hover states
+Avoid excessive use of decorative card backgrounds.
+Fighter Cards
+Fighter cards should prioritize the fighter image.
+A typical card hierarchy is:
+FIGHTER IMAGE
+
+FIGHTER NAME
+NICKNAME
+
+WEIGHT CLASS       RECORD
+If the fighter is ranked, the ranking should be displayed as secondary metadata.
+Event Cards
+Event cards should prioritize event artwork or imagery.
+They may display:
+Event name
+Date
+Location
+Main event
+Status
+View Event action
+Featured event cards can use a more cinematic presentation than standard event cards.
+News Cards
+News cards should prioritize the article image and headline.
+They may display:
+Image
+Title
+Date
+Short excerpt when appropriate
+Rankings
+Ranking interfaces should feel official and structured rather than card-heavy.
+Ranking lists should prioritize:
+Position
+Fighter name
+Record
+Ranking movement
+Relevant weight class information
+Rows should have clear hover and active states.
+Ranking numbers can use the brand accent selectively.
+Champions are displayed separately from contender rankings.
+Imagery
+Fighter and event imagery are major parts of the visual identity.
+Preferred imagery characteristics:
+Cinematic
+High contrast
+Dynamic
+Professional
+Strong subject isolation
+Dark or controlled backgrounds
+Large imagery should be used in:
+Homepage Hero
+Event Hero
+Fighter Hero
+Fighter Cards
+Featured News
+Featured Events
+Images should not overwhelm the information hierarchy.
+Image URLs are provided by the data layer and may reference external image hosts.
+Motion
+Motion should be subtle, fast, and purposeful.
+Use animation for:
+Carousel transitions
+Card hover states
+Image hover effects
+Navigation interactions
+Button interactions
+Theme transitions
+Ranking indicators
+Mobile menu transitions
+Avoid unnecessary animation.
+Premium visual quality should come from composition, typography, imagery, and spacing rather than excessive motion.
+Carousel Behavior
+Event Carousel
+The Event Carousel represents a chronological timeline.
+
+No autoplay.
+Previous and next controls.
+Keyboard navigation.
+Mobile swipe support.
+Current event should receive the strongest visual emphasis.
+News Carousel
+The News Carousel highlights popular or featured news.
+Autoplay enabled.
+Previous and next controls.
+Mobile swipe support.
+Pause on hover where applicable.
+Clicking an item navigates to the article.
+Responsive Design
+The website must be fully responsive.
+Design should be considered across:
+Mobile
+Tablet
+Desktop
+Large desktop
+Do not treat mobile as a reduced desktop layout.
+Important layouts should be intentionally designed for smaller screens.
+Examples:
+Navbar becomes a mobile menu.
+Multi-column grids collapse appropriately.
+Carousels support touch/swipe interaction.
+Typography scales responsively.
+Large hero compositions adapt to smaller viewports.
+Tables or ranking layouts remain readable without horizontal overflow where practical.
+Component Library
+Use shadcn/ui on top of Tailwind CSS where appropriate.
+Reusable components should live in appropriate component directories.
+Use the shadcn CLI when adding standard shadcn/ui components rather than manually recreating components that already exist in the library.
+Custom components should be created when the project's specific UI requirements are not adequately covered by shadcn/ui.
+Icons
+Use Lucide React.
+Icons should be stroke-based.
+Avoid filled icon variants unless there is a clear design reason.
+Recommended sizes:
+h-4 w-4 for inline icons
+h-5 w-5 for buttons and navigation
+h-6 w-6 for larger controls
+h-8 w-8 for prominent feature or empty-state icons
+Icons should support the interface rather than become decorative elements.
+UI Principles
+Premium over flashy.
+Aggressive through typography, imagery, and contrast rather than excessive decoration.
+Modern through clean composition and restrained motion.
+Red is an accent, not the dominant color.
+Dark mode is the default, but Light mode must remain fully supported.
+Use design tokens instead of arbitrary colors.
+Prefer whitespace and hierarchy over unnecessary visual elements.
+Keep components visually consistent across pages.
+Preserve strong readability and accessibility.
+Do not introduce visual patterns that conflict with the established brand identity.
