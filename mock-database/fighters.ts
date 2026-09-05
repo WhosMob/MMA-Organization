@@ -23,13 +23,13 @@ export interface MockFighter {
 export const fighters: MockFighter[] = [
   // ─── Heavyweight ───────────────────────────────────────────────
   {
-    id: "derek-lewis",
-    name: "Derek Lewis",
-    imageUrl: "",
-    nickname: "The Black Beast",
-    record: "27-11-0",
+    id: "shamil-gaziev",
+    name: "Shamil Gaziev",
+    imageUrl: "/gaziev.jpg",
+    nickname: "No Nickname",
+    record: "15-3",
     weightClass: "Heavyweight",
-    rankings: { p4p: null, division: null },
+    rankings: { p4p: 1, division: null },
     isChampion: true,
     movement: { p4p: null, division: null },
     p4pMovementChange: 0,
@@ -606,15 +606,16 @@ export const fighters: MockFighter[] = [
 
   // ─── Welterweight ──────────────────────────────────────────────
   {
-    id: "leon-edwards",
-    name: "Leon Edwards",
-    nickname: "Rocky",
-    record: "22-3-0",
+    id: "myktybek-orolbai",
+    name: "Myktybek Orolbai",
+    nickname: "No Nickname",
+    imageUrl: "/orolbai.jpg",
+    record: "16-3",
     weightClass: "Welterweight",
-    rankings: { p4p: 6, division: null },
+    rankings: { p4p: 1, division: null },
     isChampion: true,
     movement: { p4p: "UP", division: null },
-    p4pMovementChange: 1,
+    p4pMovementChange: 0,
     divisionMovementChange: 0,
   },
   {
@@ -805,7 +806,7 @@ export const fighters: MockFighter[] = [
     nickname: "The Storm",
     record: "26-3-0",
     weightClass: "Lightweight",
-    rankings: { p4p: 1, division: null },
+    rankings: { p4p: 2, division: null },
     isChampion: true,
     movement: { p4p: "STABLE", division: null },
     p4pMovementChange: 0,
