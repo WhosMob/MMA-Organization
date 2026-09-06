@@ -10,11 +10,13 @@ The information in this file must describe the actual state of the project, not 
 
 - Homepage implementation (Hero + Events + P4P + Champions + News sections complete; Recent Results remains pending).
 - Fighters listing page complete.
+- Fighter Profile page (phase 1) complete.
 
 ## Current Goal
 
 - Build out the homepage sections in order per `ui-context.md` (Hero, Events/Recent Results, P4P, Champions, News). Hero, Events, P4P, Champions, and News are complete.
 - Fighters listing page (`/fighters`) is complete.
+- Fighter Profile page (`/fighters/[fighter-slug]`) phase 1 is complete (Hero, Information, Rankings, Championships).
 
 ## Completed
 
@@ -31,7 +33,7 @@ The information in this file must describe the actual state of the project, not 
 - Implemented the Homepage Events section (`components/home/events-section.tsx`, Server Component) directly below the Hero as a single "Events" section: section heading + one event carousel. The former featured "Next Event" block and separate "Past Events" heading were removed per user direction.
 - Implemented the Events carousel (`components/home/events-carousel.tsx`, Client Component): one chronological timeline of all events where the center card shows the highlighted/current event with faded side previews of the previous (left) and next (right) events peeking behind it; prev/next arrow buttons, keyboard navigation (arrow keys), mobile swipe, and the current event receives the strongest visual emphasis. Previews render on `md:`+ and hide on small screens.
 - Event cards use a cinematic presentation: full-bleed image with a dark gradient scrim, an "Upcoming" accent pill (or ghost date pill for past events), a MapPin venue · location line, hover image zoom, and the centered card is emphasized with a subtle red glow ring + deep shadow.
-- Created the `mock-database/` development data layer per the architecture Development Data Strategy: `mock-database/events.ts` exposes a typed `MockEvent` + `upcomingEvent`, `futureEvents` (added one 2027 event "MMA — Warpath"), `pastEvents`, and a date-sorted `allEvents` timeline mirroring the target Prisma Event model. `mock-database/fighters.ts` contains 160 fighters with embedded ranking data, champion status, movement indicators, and optional `imageUrl`.
+- Created the `mock-database/` development data layer per the architecture Development Data Strategy: `mock-database/events.ts` exposes a typed `MockEvent` + `upcomingEvent`, `futureEvents` (added one 2027 event "MMA — Warpath"), `pastEvents`, and a date-sorted `allEvents` timeline mirroring the target Prisma Event model. `mock-database/fighters.ts` contains 128 fighters with embedded ranking data, champion status, movement indicators, and an `imageUrl` field (currently `""` for all fighters).
 - Added server-side data access helper `lib/events.ts` (`getEvents()`) — the future swap point for Prisma queries; UI consumes mock data, holds no mock definitions. `getUpcomingEvent()`/`getPastEvents()` were removed (replaced by `getEvents()`).
 - Configured `images.remotePatterns` for the mock event artwork host in `next.config.ts` to support Next `<Image>` with the external URL.
 - Implemented the Homepage P4P section (`components/home/p4p-section.tsx`, Server Component): "Pound for Pound" heading in Barlow Condensed, "Top 5 fighters in the world" subtitle, ranking list with position numbers, fighter names, nicknames, weight classes, records, and ranking movement indicators (UP/DOWN/STABLE/NEW); clickable rows link to fighter profiles; "View Full Rankings →" link to `/rankings`.
@@ -40,7 +42,7 @@ The information in this file must describe the actual state of the project, not 
 - Verified with `npm run lint` (passes), `npm run build` (passes), and a live render check (hero CTAs + scroll arrow, Events heading, carousel arrows, and the centered "Night of Champions" / previewed "Warpath" events all render).
 
 - Implemented the Homepage Champions section (`components/home/champions-section.tsx`, Server Component): "Champions" heading in Barlow Condensed, 8 champions in a 4-column grid (all viewports), cards scale down responsively on mobile (smaller padding, text, gaps); each card shows weight class, champion name, nickname, and image; cards link to fighter profiles; derived from `mock-database/fighters.ts` using `getAllChampions()` helper; ordered by canonical weight-class order (Heavyweight → Flyweight); no hardcoded champion names.
-- Added `imageUrl?: string | null` to `MockFighter` interface. Derek Lewis uses `/globe.svg` as placeholder image.
+- Added `imageUrl?: string | null` to `MockFighter` interface, later made required (`imageUrl: string`) with every fighter set to `""` awaiting real image URLs.
 - Added `unsplash.com` to `images.remotePatterns` in `next.config.ts` (event images reference this domain).
 - Champion name text color uses inline `style={{ color: "var(--text-primary)" }}` instead of Tailwind `text-ink` utility — the Tailwind token was not resolving correctly in this component context.
 - Implemented the Homepage News section (`components/home/news-section.tsx`, Server Component): "News" heading in Barlow Condensed with "Popular &amp; Featured" eyebrow, placed after the Champions section in `app/page.tsx`; renders the popular news carousel and an empty-state message when no popular news exists.
@@ -56,6 +58,20 @@ The information in this file must describe the actual state of the project, not 
 - Created `components/fighters/fighters-browser.tsx` (Client Component): search input (case-insensitive against name + nickname), weight class dropdown filter (All + 8 divisions), both filters compose with AND logic, empty state with "Clear filters" reset, fighter count display, responsive grid (4-col mobile, 6-col xl, 8-col 2xl). Select padding adjusted to `pl-4 pr-8` for proper text alignment on Windows native dropdowns.
 - Created `components/fighters/fighter-card.tsx` (presentational): fighter image with dark gradient overlay, name + nickname in the image overlay, weight class + record row below, champion badge pill (top-right), P4P rank badge when ranked, division rank badge when ranked, clickable Link to `/fighters/[fighter-slug]`, hover scale + border/shadow lift consistent with homepage card patterns. All typography, badges, and padding fully scaled for 4-col mobile layout (champion badge `text-[7px]`, name `text-[10px]`, division badge shows only `#N` on mobile). Nickname line always renders to keep names vertically aligned.
 - Verified with `npm run lint` (passes; only pre-existing `no-img-element` warnings), `npm run build` (passes, static prerender of `/fighters`).
+- Extended the mock fighter database (`mock-database/fighters.ts`) per `context/features-developing/09-revise-the-fighters-datbase.md`: added `nationality`, `dateOfBirth` (`YYYY-MM-DD`), `height` (`F'IN / cm`), `reach` (`F'IN / cm`), and `championships` (array of `{ title }`) to every fighter. Added the `MockFighterChampionship` interface. No `age` field, no championship `status` field, no fight/event data added (deferred to a future `mock-database/fights.ts`), and existing IDs/slugs, records, rankings, `isChampion`, and movement fields were preserved unchanged. Fictional but internally coherent biographical data (nationalities, DOBs, physicals) was authored per fighter; current champions hold their division title, and a small set of established veterans (Whittaker, Ferguson, dos Anjos, Poirier, Oliveira, Holloway, Yan, Aldo, Edgar, Figueiredo) carry former-champion title entries. Verified with `npx tsc --noEmit`, `npm run lint`, `npm run build`, and a field-presence/lint script (all pass; only pre-existing duplicate P4P #1/#2 data and image warnings remain).
+- Standardized the fighter `imageUrl` field in `mock-database/fighters.ts`: changed `MockFighter.imageUrl` from `string | null | undefined` to a required `imageUrl: string`, added `imageUrl: ""` to every fighter, and removed the previous placeholder paths (`/gaziev.jpg`, `/orolbai.jpg`). All 128 fighters now carry `imageUrl: ""` awaiting real image URLs. No other fighter field was touched. Verified with `npx tsc --noEmit` (passes).
+
+- Implemented the Fighter Profile page (`/fighters/[fighter-slug]`) Phase 1 per `context/features-developing/10-fighterProfile.md`. Server Component page (`app/fighters/[fighter-slug]/page.tsx`) with `generateStaticParams()` (all 128 fighter slugs), `generateMetadata()` (title `${name} — MMA Organization`, description built from fighter data, "Fighter Not Found" fallback), and `notFound()` from `next/navigation` for unknown slugs. Renders exactly four sections — Fighter Profile Hero, Fighter Information, Rankings, Championships. Fight History and Recent Fights are intentionally NOT built yet (deferred to a future `mock-database/fights.ts` per the spec).
+  - Added `lib/calculate-age.ts` → `calculateAge(dateOfBirth)` (age computed dynamically; correctly handles birthdays not yet passed).
+  - Added `getFighterBySlug(slug)` to `lib/fighters.ts`; data source remains `mock-database/fighters.ts` (no new data source created).
+  - `FighterProfileHero` (`components/fighters/fighter-profile-hero.tsx`): Barlow Condensed name (5xl→7xl), weight-class eyebrow, CHAMPION pill when `isChampion`, nickname, record, P4P/division rank pills, `aspect-[3/4]` image panel with initials fallback when `imageUrl` is empty and no broken `<img>`; uses `<img>` like existing fighter cards (same pre-existing lint warning).
+  - `FighterInformationSection` (`components/fighters/fighter-information-section.tsx`): semantic `<dl>` grid (2-col mobile → 5-col lg) with styled stat cards — Nationality (Globe), Date of Birth (CalendarDays, raw string), Age (Cake, via `calculateAge`), Height (Ruler), Reach (ArrowLeftRight); height/reach displayed exactly as stored.
+  - `FighterRankingsSection` (`components/fighters/fighter-rankings-section.tsx`): two cards — P4P (accent) and division (neutral). Champions (`rankings.division === null` + `isChampion`) display "Champion" and are never treated as Division Rank #1; unranked slots show "Not Ranked".
+  - `FighterChampionshipsSection` (`components/fighters/fighter-championships-section.tsx`): returns `null` when `championships` is empty (no empty/meaningless section); otherwise a Trophy-anchored title list with a "Current Champion" sub-label when `isChampion`.
+  - All components are Server Components, token-driven only, follow the existing section eyebrow + Barlow Condensed h2 patterns; no new libraries added.
+  - Verified with `npx tsc --noEmit` (passes), `npm run lint` (passes; only pre-existing `no-img-element` warnings including the new hero), `npm run build` (passes; 133 static pages — `/`, `/_not-found`, `/fighters`, and 130 fighter profile pages including the `[fighter-slug]` dynamic route), and live `next start` checks: valid slug returns 200 with correct name/nickname/record/P4P #13/division "Champion"/age/rankings/championships; invalid slug returns 404; empty `imageUrl` renders initials placeholder; non-champion ranked fighter shows division `#1` and no empty championships section; champion without P4P rank shows P4P "Not Ranked" and division "Champion"; age boundary cases correct (Volkanovski `1988-09-29` → 37 before birthday, Rivera `1992-05-09` → 34 after birthday; reference date 2026-09-06).
+- Applied the `text-ink` workaround (same as champions-section) to all Fighter Profile `text-ink` elements: replaced the Tailwind class with inline `style={{ color: "var(--text-primary)" }}` on the hero `h1`/record `span`, info section `dd`/`h2`, rankings section division number/`h2`, and championships section title/`h2`. This fixes the theme-color resolution issue where `text-ink` produced near-invisible text in both dark and light modes on these elements. Verified with `npx tsc --noEmit`, `npm run lint`, `npm run build` (all pass; 133 static pages).
+- Made the hero division ranking pill display the weight class on all viewports: removed `hidden sm:inline` from `fighter-profile-hero.tsx` so mobile shows `#1 LIGHT HEAVYWEIGHT` like desktop (previously mobile showed only `#1`). Verified with `npx tsc --noEmit`, `npm run lint`, `npm run build` (all pass).
 
 ## In Progress
 
@@ -64,7 +80,7 @@ The information in this file must describe the actual state of the project, not 
 ## Next Up
 
 - Implement the Recent Results homepage section (horizontal carousel per `ui-context.md`), adding the `mock-database/fights.ts` data module as needed.
-- Implement Fighter Profile page (`/fighters/[fighter-slug]`).
+- Implement Fighter Profile Phase 2 (Recent Fights + Fight History sections with `mock-database/fights.ts`) once the mock fights data module exists.
 - Implement Rankings page, Events page, News page, About page, Contact page as placeholders or full implementations so nav/footer links resolve.
 
 ## Mock Database Refactor
@@ -85,7 +101,12 @@ interface MockFighter {
   nickname: string | null;
   record: string;
   weightClass: string;
-  imageUrl?: string | null;
+  nationality: string;
+  dateOfBirth: string;
+  height: string;
+  reach: string;
+  championships: MockFighterChampionship[];
+  imageUrl: string;
   rankings: {
     p4p: number | null;    // null = not ranked P4P
     division: number | null; // null = not ranked in division
@@ -128,7 +149,7 @@ interface MockFighter {
 
 ## Known Issues
 
-- Tailwind `text-ink` utility does not resolve correctly for text color inside the Champions card `<Link>` component. Workaround: use inline `style={{ color: "var(--text-primary)" }}` where theme-aware text color is needed in that context. Other sections (P4P, navbar, etc.) use `text-ink` without issue.
+- Tailwind `text-ink` utility does not resolve correctly for text color inside certain component contexts (Champions card `<Link>`, Fighter Profile `dd`/`h1`/`h2` elements). Workaround: use inline `style={{ color: "var(--text-primary)" }}` where theme-aware text color is needed in those contexts. Other sections (P4P, navbar, etc.) use `text-ink` without issue.
 - Hero heading (`text-6xl`) and CTA buttons (`w-36`) overflow on small mobile screens (< 400px). Needs responsive sizing for mobile viewports.
 
 ## Architecture Decisions
@@ -144,6 +165,8 @@ interface MockFighter {
 - Fighters page uses a Server Component for the page shell and data fetching, with a Client Component (`FightersBrowser`) isolated for the interactive search/filter state. This follows the architecture principle of not converting entire pages to Client Components when only a portion requires interactivity.
 - `lib/fighters.ts` exports `WEIGHT_CLASSES` as a const tuple to keep the canonical division list in one place; both the filter dropdown and any future weight-class logic reference this single source.
 - Fighter card links use the existing `id` field (slugified names) as the URL slug, matching the convention already used by the P4P section and champions section links.
+- Fighter Profile pages are fully static (SSG via `generateStaticParams`), so biographical age is computed at build time via `lib/calculate-age.ts`. Acceptable for the mock phase (static data); will need a runtime strategy when ages become dynamic.
+- Fighter Profile uses inline `params` typing (`{ params: Promise<{ "fighter-slug": string }> }`) rather than relying on generated `.next/types` route types, keeping standalone `npx tsc --noEmit` valid. Next.js 16 makes `params` a Promise, awaited in the page, `generateMetadata`, and `generateStaticParams`.
 
 ## Session Notes
 
@@ -163,3 +186,9 @@ interface MockFighter {
 - The `FightersBrowser` Client Component uses `useMemo` for filtered results to avoid re-filtering on every render when only unrelated state changes.
 - The search input uses `sr-only` label for accessibility; the weight class filter uses a native `<select>` element for simplicity and accessibility rather than a custom dropdown component.
 - Fighter card design follows the visual hierarchy specified in ui-context.md: image prominently displayed with dark gradient scrim, fighter name and nickname overlaid, weight class and record below, ranking metadata as secondary badges.
+- Every fighter in `mock-database/fighters.ts` now carries `nationality`, `dateOfBirth` (`YYYY-MM-DD`, age computed dynamically per code-standards.md), `height`/`reach` (`F'IN / cm`), and `championships` (`MockFighterChampionship[]` of `{ title }`) for the upcoming Fighter Profile page. Champions list their reigning division title; select veterans list former titles. No fight data yet — that belongs to `mock-database/fights.ts` (not yet created).
+- `MockFighter.imageUrl` is a required `string` set to `""` for all 128 fighters. UI components that render fighter images already handle a missing/empty URL via a `bg-subtle` fallback, so the placeholder paths (`/gaziev.jpg`, `/orolbai.jpg`) were safe to remove. Real image URLs will be added when the fighters page swaps to production data.
+- The `text-ink` Tailwind utility fails to resolve correctly in certain component contexts — observed in champions card `<h3>` and fighter-profile `dd`/`h1`/`h2` elements, producing near-invisible text in both themes. The inline `style={{ color: "var(--text-primary)" }}` pattern is the established mitigation. The mechanism behind the `text-ink` resolution failure is not fully understood; further investigation may be warranted if the issue spreads to other components.
+- Fighter Profile page is live: P4P section, Champions section, and Fighters browser links to `/fighters/[fighter-slug]` now resolve instead of 404-ing. Unknown slugs render Next's default 404 page (no custom `not-found.tsx` exists yet).
+- The Fighter Profile hero's empty-`imageUrl` initials fallback follows the same fallback pattern already used across fighter cards.
+- `mock-database/fights.ts` does not exist yet; Fighter Profile Phase 2 (Recent Fights + Fight History) and the Recent Results homepage carousel both depend on it.
