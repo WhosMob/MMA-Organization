@@ -9,10 +9,12 @@ The information in this file must describe the actual state of the project, not 
 ## Current Phase
 
 - Homepage implementation (Hero + Events + P4P + Champions + News sections complete; Recent Results remains pending).
+- Fighters listing page complete.
 
 ## Current Goal
 
 - Build out the homepage sections in order per `ui-context.md` (Hero, Events/Recent Results, P4P, Champions, News). Hero, Events, P4P, Champions, and News are complete.
+- Fighters listing page (`/fighters`) is complete.
 
 ## Completed
 
@@ -49,6 +51,12 @@ The information in this file must describe the actual state of the project, not 
 - Verified with `npm run lint` (passes; only pre-existing `no-img-element` warning in champions-section.tsx), `npm run build` (passes, static prerender of `/`), and a live render check (News heading, `id="news"` anchor, carousel region, and a `/news/[slug]` link all present in the served HTML).
 - Adjusted Homepage Hero section height: changed `min-h-160` to `min-h-[calc(100vh-4rem)]` so the hero fills exactly the viewport minus the navbar, keeping the scroll arrow visible without scrolling on both desktop and mobile. Reduced inner content padding (`pt-10 lg:pt-6`, `gap-4`) for tighter vertical spacing.
 
+- Implemented the Fighters listing page (`/fighters`): Server Component page (`app/fighters/page.tsx`) with page header (title + description) and a Client Component `FightersBrowser` for interactive search/filter.
+- Created `lib/fighters.ts` server-side data access helper: exports `getAllFighters()` and `WEIGHT_CLASSES` constant (canonical 8 divisions in project order). Future swap point for Prisma queries.
+- Created `components/fighters/fighters-browser.tsx` (Client Component): search input (case-insensitive against name + nickname), weight class dropdown filter (All + 8 divisions), both filters compose with AND logic, empty state with "Clear filters" reset, fighter count display, responsive grid (4-col mobile, 6-col xl, 8-col 2xl). Select padding adjusted to `pl-4 pr-8` for proper text alignment on Windows native dropdowns.
+- Created `components/fighters/fighter-card.tsx` (presentational): fighter image with dark gradient overlay, name + nickname in the image overlay, weight class + record row below, champion badge pill (top-right), P4P rank badge when ranked, division rank badge when ranked, clickable Link to `/fighters/[fighter-slug]`, hover scale + border/shadow lift consistent with homepage card patterns. All typography, badges, and padding fully scaled for 4-col mobile layout (champion badge `text-[7px]`, name `text-[10px]`, division badge shows only `#N` on mobile). Nickname line always renders to keep names vertically aligned.
+- Verified with `npm run lint` (passes; only pre-existing `no-img-element` warnings), `npm run build` (passes, static prerender of `/fighters`).
+
 ## In Progress
 
 - None yet.
@@ -56,7 +64,8 @@ The information in this file must describe the actual state of the project, not 
 ## Next Up
 
 - Implement the Recent Results homepage section (horizontal carousel per `ui-context.md`), adding the `mock-database/fights.ts` data module as needed.
-- Implement the remaining route pages required for the global nav (Rankings, Fighters, News, Events, About, Contact) as placeholders so nav/footer links resolve.
+- Implement Fighter Profile page (`/fighters/[fighter-slug]`).
+- Implement Rankings page, Events page, News page, About page, Contact page as placeholders or full implementations so nav/footer links resolve.
 
 ## Mock Database Refactor
 
@@ -132,6 +141,9 @@ interface MockFighter {
 - The project is in the mock-data development phase per the architecture Development Data Strategy: UI consumes data from `mock-database/` modules via server-side helpers in `lib/`; mock data definitions never live inside UI components. This layer will be replaced by Prisma/PostgreSQL queries later without rewriting UI.
 - Social media links (Instagram, X, YouTube, Telegram) use inline stroke-style SVG icons defined in the project (`social-icons.tsx`). Lucide 1.41.0 no longer ships brand icons, so these were hand-drawn to match the stroke-based icon convention.
 - P4P rankings use a ranking-list presentation (not cards) per ui-context.md. Position numbers use Barlow Condensed font, ranking movement indicators use color-coded arrows (green for UP, red for DOWN, neutral dash for STABLE, accent for NEW). Rows are clickable links to fighter profiles.
+- Fighters page uses a Server Component for the page shell and data fetching, with a Client Component (`FightersBrowser`) isolated for the interactive search/filter state. This follows the architecture principle of not converting entire pages to Client Components when only a portion requires interactivity.
+- `lib/fighters.ts` exports `WEIGHT_CLASSES` as a const tuple to keep the canonical division list in one place; both the filter dropdown and any future weight-class logic reference this single source.
+- Fighter card links use the existing `id` field (slugified names) as the URL slug, matching the convention already used by the P4P section and champions section links.
 
 ## Session Notes
 
@@ -147,3 +159,7 @@ interface MockFighter {
 - News mock data (`mock-database/news.ts`) references Unsplash image URLs already whitelisted in `images.remotePatterns`; not all image IDs were verified to load at runtime, but a broken image degrades to the card's `bg-subtle` fallback without breaking the page.
 - News article dates (June–September 2026) are consistent with the org's event timeline (MMA 37 Feb 2026 → Night of Champions Nov 2026, Warpath Feb 2027).
 - `/news/[news-slug]` route targets generated from mock slugs are intentionally not-yet-implemented pages (per 07-news-section.md scope); they will 404 until the News pages are built.
+- Fighters page (`/fighters`) is now live and links resolve from the Navbar. Fighter card links point to `/fighters/[fighter-slug]` which will 404 until the Fighter Profile page is built.
+- The `FightersBrowser` Client Component uses `useMemo` for filtered results to avoid re-filtering on every render when only unrelated state changes.
+- The search input uses `sr-only` label for accessibility; the weight class filter uses a native `<select>` element for simplicity and accessibility rather than a custom dropdown component.
+- Fighter card design follows the visual hierarchy specified in ui-context.md: image prominently displayed with dark gradient scrim, fighter name and nickname overlaid, weight class and record below, ranking metadata as secondary badges.

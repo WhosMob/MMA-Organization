@@ -26,7 +26,7 @@ export const fighters: MockFighter[] = [
     id: "shamil-gaziev",
     name: "Shamil Gaziev",
     imageUrl: "/gaziev.jpg",
-    nickname: "No Nickname",
+    nickname: "",
     record: "15-3",
     weightClass: "Heavyweight",
     rankings: { p4p: 1, division: null },
