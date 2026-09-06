@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { FighterChampionshipsSection } from "@/components/fighters/fighter-championships-section";
+import { FighterFightHistorySection } from "@/components/fighters/fighter-fight-history-section";
 import { FighterInformationSection } from "@/components/fighters/fighter-information-section";
 import { FighterProfileHero } from "@/components/fighters/fighter-profile-hero";
 import { FighterRankingsSection } from "@/components/fighters/fighter-rankings-section";
+import { FighterRecentFightsSection } from "@/components/fighters/fighter-recent-fights-section";
+import { FighterUpcomingFightsSection } from "@/components/fighters/fighter-upcoming-fights-section";
 import { getAllFighters, getFighterBySlug } from "@/lib/fighters";
 
 type FighterProfileParams = {
@@ -54,6 +57,9 @@ export default async function FighterProfilePage({
       <FighterInformationSection fighter={fighter} />
       <FighterRankingsSection fighter={fighter} />
       <FighterChampionshipsSection fighter={fighter} />
+      <FighterUpcomingFightsSection fighter={fighter} />
+      <FighterRecentFightsSection fighter={fighter} />
+      <FighterFightHistorySection fighter={fighter} />
     </div>
   );
 }
