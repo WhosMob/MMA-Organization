@@ -13,12 +13,12 @@ export function Hero() {
         sizes="100vw"
         className="object-cover opacity-40"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-base via-base/80 to-base/40" />
+      <div className="absolute inset-0 bg-linear-to-r from-base via-base/80 to-base/40" />
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-5 px-4 pb-16 pt-20 text-center sm:px-6 lg:pt-8">
         <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent-primary">
           <span className="inline-block size-1.5 rounded-full bg-accent-primary" />
-          Welcome to MMA
+          Welcome to
         </p>
 
         <h1 className="max-w-3xl font-heading text-6xl font-bold uppercase leading-[0.9] tracking-tight text-ink sm:text-7xl lg:text-8xl">
