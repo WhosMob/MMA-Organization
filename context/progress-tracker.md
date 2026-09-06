@@ -47,6 +47,7 @@ The information in this file must describe the actual state of the project, not 
 - Implemented the News carousel (`components/home/news-carousel.tsx`, Client Component): single-slide track carousel with `translateX(-current * 100%)` and 500ms easing; exactly 5-second autoplay interval (single `setInterval` cleared on cleanup, reset on slide change/manual nav); autoplay pauses on mouse enter/focus and resumes on leave/blur; reduced-motion preference (via `useSyncExternalStore` on `matchMedia`) disables autoplay and the slide transition; prev/next arrow `Button`s, dot indicators, keyboard arrow navigation on the focusable `role="region"`, and mobile swipe (>40px delta). Slides link to `/news/[slug]` from the mock data.
 - Implemented the News card (`components/home/news-card.tsx`, presentational): image with dark gradient scrim and backdrop-blurred publication-date pill (lucide `Calendar`), Barlow Condensed title, two-line-clamped excerpt; token-driven surfaces/text; hover image zoom + `border-line`/shadow lift; `group-hover:text-accent-primary` title.
 - Verified with `npm run lint` (passes; only pre-existing `no-img-element` warning in champions-section.tsx), `npm run build` (passes, static prerender of `/`), and a live render check (News heading, `id="news"` anchor, carousel region, and a `/news/[slug]` link all present in the served HTML).
+- Adjusted Homepage Hero section height: changed `min-h-160` to `min-h-[calc(100vh-4rem)]` so the hero fills exactly the viewport minus the navbar, keeping the scroll arrow visible without scrolling on both desktop and mobile. Reduced inner content padding (`pt-10 lg:pt-6`, `gap-4`) for tighter vertical spacing.
 
 ## In Progress
 
@@ -119,6 +120,7 @@ interface MockFighter {
 ## Known Issues
 
 - Tailwind `text-ink` utility does not resolve correctly for text color inside the Champions card `<Link>` component. Workaround: use inline `style={{ color: "var(--text-primary)" }}` where theme-aware text color is needed in that context. Other sections (P4P, navbar, etc.) use `text-ink` without issue.
+- Hero heading (`text-6xl`) and CTA buttons (`w-36`) overflow on small mobile screens (< 400px). Needs responsive sizing for mobile viewports.
 
 ## Architecture Decisions
 

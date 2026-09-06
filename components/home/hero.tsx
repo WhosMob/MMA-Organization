@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative flex min-h-160 w-full items-center overflow-hidden bg-base">
+    <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center overflow-hidden bg-base">
       <Image
         src=""
         alt=""
@@ -15,7 +15,7 @@ export function Hero() {
       />
       <div className="absolute inset-0 bg-linear-to-r from-base via-base/80 to-base/40" />
 
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-5 px-4 pb-16 pt-20 text-center sm:px-6 lg:pt-8">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col items-center gap-4 px-4 pb-16 pt-10 text-center sm:px-6 lg:pt-6">
         <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent-primary">
           <span className="inline-block size-1.5 rounded-full bg-accent-primary" />
           Welcome to
