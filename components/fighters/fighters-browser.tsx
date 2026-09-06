@@ -4,6 +4,13 @@ import { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
 import type { MockFighter } from "@/mock-database/fighters";
 import { WEIGHT_CLASSES, type WeightClass } from "@/lib/fighters";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { FighterCard } from "./fighter-card";
 
 interface FightersBrowserProps {
@@ -59,24 +66,26 @@ export function FightersBrowser({ fighters }: FightersBrowserProps) {
         </div>
 
         <div className="flex items-center gap-2">
-          <label htmlFor="weight-class-filter" className="sr-only">
-            Filter by weight class
-          </label>
-          <select
-            id="weight-class-filter"
+          <Select
             value={selectedWeightClass}
-            onChange={(e) =>
-              setSelectedWeightClass(e.target.value as WeightClass | "All")
+            onValueChange={(v) =>
+              setSelectedWeightClass(v as WeightClass | "All")
             }
-            className="h-10 rounded-lg border border-line-subtle bg-surface pl-4 pr-8 text-sm text-ink outline-none transition-colors focus:border-accent-primary focus:ring-1 focus:ring-accent-primary/30 cursor-pointer"
           >
-            <option value="All">All Weight Classes</option>
-            {WEIGHT_CLASSES.map((wc) => (
-              <option key={wc} value={wc}>
-                {wc}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger
+              className="!h-10 rounded-lg border border-line-subtle bg-surface pl-4 pr-2 text-sm text-ink cursor-pointer"
+            >
+              <SelectValue placeholder="All Weight Classes" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All Weight Classes</SelectItem>
+              {WEIGHT_CLASSES.map((wc) => (
+                <SelectItem key={wc} value={wc}>
+                  {wc}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           {hasActiveFilters && (
             <button
