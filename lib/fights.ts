@@ -88,3 +88,44 @@ export async function getFighterFights(
 
   return fighterFights.sort((a, b) => b.date.localeCompare(a.date));
 }
+
+export async function getEventFights(
+  eventId: string
+): Promise<FighterFight[]> {
+  const [allFighters, allEvents] = await Promise.all([
+    getAllFighters(),
+    getEvents(),
+  ]);
+
+  const fighterById = new Map(allFighters.map((fighter) => [fighter.id, fighter]));
+  const eventById = new Map(allEvents.map((event) => [event.id, event]));
+
+  const eventFights: FighterFight[] = [];
+
+  for (const fight of fights) {
+    if (fight.eventId !== eventId) continue;
+
+    const fighter1 = fighterById.get(fight.fighter1Id);
+    const fighter2 = fighterById.get(fight.fighter2Id);
+    const event = eventById.get(fight.eventId);
+
+    if (!fighter1 || !fighter2 || !event) continue;
+
+    eventFights.push({
+      id: fight.id,
+      selfId: fight.fighter1Id,
+      fighter1,
+      fighter2,
+      opponent: fighter2,
+      event,
+      weightClass: fight.weightClass,
+      cardPosition: fight.cardPosition,
+      date: fight.date,
+      status: fight.status,
+      result: fight.result,
+      outcome: deriveFighterOutcome(fight, fight.fighter1Id),
+    });
+  }
+
+  return eventFights;
+}
