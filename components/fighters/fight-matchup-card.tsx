@@ -108,9 +108,9 @@ function FighterPanel({ fighter, isWinner }: FighterPanelProps) {
         </div>
       </div>
 
-      <div className="min-w-0">
+      <div className="min-w-0 max-w-full">
         <h3
-          className="font-heading text-lg font-bold uppercase leading-tight tracking-tight sm:text-xl lg:text-2xl"
+          className="truncate font-heading text-lg font-bold uppercase leading-tight tracking-tight sm:text-xl lg:text-2xl"
           style={{ color: "var(--text-primary)" }}
         >
           {fighter.name}
