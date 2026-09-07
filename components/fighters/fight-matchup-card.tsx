@@ -30,11 +30,11 @@ function formatMethod(method: FightMethod) {
     case "SUBMISSION":
       return "Submission";
     case "UNANIMOUS_DECISION":
-      return "Unanimous Decision";
+      return "U Decision";
     case "SPLIT_DECISION":
-      return "Split Decision";
+      return "S Decision";
     case "MAJORITY_DECISION":
-      return "Majority Decision";
+      return "M Decision";
   }
 }
 
@@ -115,11 +115,13 @@ function FighterPanel({ fighter, isWinner }: FighterPanelProps) {
         >
           {fighter.name}
         </h3>
-        {fighter.nickname && (
+       {/*
+            {fighter.nickname && (
           <p className="mt-0.5 text-xs leading-snug text-ink-secondary sm:text-sm">
             &ldquo;{fighter.nickname}&rdquo;
-          </p>
-        )}
+          </p> 
+       )}    
+            */}
         <p className="mt-1 text-xs font-medium text-ink-muted sm:text-sm">
           {fighter.record}
         </p>
