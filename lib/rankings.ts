@@ -7,6 +7,7 @@ export interface MockRanking {
   fighterNickname: string | null;
   record: string;
   weightClass: string;
+  imageUrl: string;
   movement: RankingMovement;
   movementChange: number;
 }
@@ -23,6 +24,7 @@ function fighterToRanking(fighter: MockFighter, type: "p4p" | "division"): MockR
     fighterNickname: fighter.nickname,
     record: fighter.record,
     weightClass: fighter.weightClass,
+    imageUrl: fighter.imageUrl,
     movement: movement ?? "STABLE",
     movementChange,
   };
