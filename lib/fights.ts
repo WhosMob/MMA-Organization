@@ -89,6 +89,59 @@ export async function getFighterFights(
   return fighterFights.sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export interface EventListItem extends MockEvent {
+  mainEvent: { fighter1: string; fighter2: string } | null;
+  fightCount: number;
+}
+
+async function getEventFightInfos(): Promise<
+  Map<string, Pick<EventListItem, "mainEvent" | "fightCount">>
+> {
+  const [allFighters, allEvents] = await Promise.all([
+    getAllFighters(),
+    getEvents(),
+  ]);
+
+  const fighterById = new Map(allFighters.map((fighter) => [fighter.id, fighter]));
+  const infos = new Map<string, Pick<EventListItem, "mainEvent" | "fightCount">>();
+
+  for (const event of allEvents) {
+    const eventFights = fights.filter((fight) => fight.eventId === event.id);
+    const mainEvent = eventFights.find(
+      (fight) => fight.cardPosition === "MAIN_EVENT"
+    );
+    const fighter1 = mainEvent
+      ? fighterById.get(mainEvent.fighter1Id)
+      : undefined;
+    const fighter2 = mainEvent
+      ? fighterById.get(mainEvent.fighter2Id)
+      : undefined;
+
+    infos.set(event.id, {
+      mainEvent:
+        mainEvent && fighter1 && fighter2
+          ? { fighter1: fighter1.name, fighter2: fighter2.name }
+          : null,
+      fightCount: eventFights.length,
+    });
+  }
+
+  return infos;
+}
+
+export async function getEventListItems(): Promise<EventListItem[]> {
+  const [allEvents, infos] = await Promise.all([getEvents(), getEventFightInfos()]);
+
+  return allEvents.map((event) => {
+    const info = infos.get(event.id);
+    return {
+      ...event,
+      mainEvent: info?.mainEvent ?? null,
+      fightCount: info?.fightCount ?? 0,
+    };
+  });
+}
+
 export async function getEventFights(
   eventId: string
 ): Promise<FighterFight[]> {
