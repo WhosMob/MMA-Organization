@@ -185,6 +185,7 @@ export function RankingsAccordion({
       {Array.from({ length: totalSections }, (_, i) => i).map((index) => {
         const title = getSectionTitle(index, divisions);
         const isP4P = index === 0;
+        const isOpen = openItems.includes(String(index));
         const divisionIndex = index - 1;
 
         return (
@@ -196,7 +197,7 @@ export function RankingsAccordion({
             <AccordionTrigger
               className={`
                 w-full py-3.5 text-left sm:py-4
-                ${isP4P
+                ${isOpen
                   ? "border-l-2 border-l-accent-primary pl-4 sm:pl-5"
                   : "pl-4 sm:pl-5"
                 }
@@ -204,14 +205,14 @@ export function RankingsAccordion({
               `}
             >
               <div className="flex items-center gap-2.5">
-                {isP4P && (
+                {isOpen && (
                   <span className="inline-block size-1.5 rounded-full bg-accent-primary" />
                 )}
                 <span
                   className={`
                     font-heading text-lg font-bold uppercase tracking-tight
                     sm:text-xl
-                    ${isP4P ? "text-ink" : "text-ink-secondary"}
+                    ${isOpen ? "text-ink" : "text-ink-secondary"}
                   `}
                 >
                   {title}
