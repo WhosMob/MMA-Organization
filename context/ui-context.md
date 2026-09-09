@@ -25,17 +25,24 @@ The design should prioritize:
 
 ## Theme
 
-The application supports both dark and light modes.
+The application supports dark and light modes, managed by next-themes.
 
-Dark mode is the default theme.
+The default theme is `system`, which follows the operating system preference.
 
-Users can switch between dark and light mode using a global theme toggle in the Navbar.
+Users can manually switch between dark and light mode using a global theme toggle in the Navbar.
+
+Manual theme selections persist across page navigation, refresh, and browser sessions via localStorage.
 
 Both themes must be designed intentionally. Light mode should not simply be an inverted version of the dark theme.
 
 All theme colors should be defined as CSS custom properties and mapped to Tailwind tokens.
 
 Components must use the defined design tokens rather than hardcoded color values or arbitrary Tailwind color classes.
+
+- Theme system: next-themes
+- Default: system
+- User-selected theme persists
+- Dark and Light supported
 
 ### Dark Theme
 

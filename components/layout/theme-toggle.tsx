@@ -1,17 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
+import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const [isDark, setIsDark] = useState(true);
+  const { resolvedTheme, setTheme } = useTheme();
+
+  const mounted = useSyncExternalStore(
+    useCallback((callback: () => void) => {
+      window.addEventListener("theme-change", callback);
+      return () => window.removeEventListener("theme-change", callback);
+    }, []),
+    useCallback(() => resolvedTheme, [resolvedTheme]),
+    useCallback(() => resolvedTheme, [resolvedTheme]),
+  );
 
   function toggleTheme() {
-    const next = !isDark;
-    setIsDark(next);
-    document.documentElement.classList.toggle("dark", next);
+    setTheme(mounted === "dark" ? "light" : "dark");
   }
+
+  if (!mounted) {
+    return (
+      <Button
+        type="button"
+        variant="ghost"
+        size="icon"
+        disabled
+        aria-label="Toggle theme"
+        title="Toggle theme"
+        className="text-ink-muted hover:text-ink"
+      >
+        <span className="size-5" />
+      </Button>
+    );
+  }
+
+  const isDark = mounted === "dark";
 
   return (
     <Button

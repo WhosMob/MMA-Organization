@@ -250,8 +250,8 @@ interface MockFighter {
 
 - Design tokens are exposed as Tailwind utility colors (`bg-base`, `bg-surface`, `bg-elevated`, `bg-subtle`, `border-line`, `border-line-subtle`, `text-ink`, `text-ink-secondary`, `text-ink-muted`, `text-ink-faint`, `text-accent-primary`, etc.) mapped from CSS custom properties in `globals.css`. Components must use these tokens rather than raw color values.
 - Sticky Navbar uses a translucent `bg-base/80` with backdrop blur; a future refinement may add scroll-state transparency behavior.
-- Dark mode is applied by the `dark` class on `<html>` (default), matching the existing `@custom-variant dark (&:is(.dark *))`.
-- Theme preference is currently not persisted; the toggle only switches the `dark` class for the session.
+- Theme system uses next-themes (v0.4.6) with class-based dark mode (`attribute="class"`), `defaultTheme="system"`, and `enableSystem`. The `@custom-variant dark (&:is(.dark *))` in `globals.css` remains compatible.
+- User-selected theme persists via next-themes localStorage. System preference is followed when no manual selection exists.
 - The Navbar and Footer wordmark is a shared `Logo` component to keep the brand mark consistent across the shell.
 - The project is in the mock-data development phase per the architecture Development Data Strategy: UI consumes data from `mock-database/` modules via server-side helpers in `lib/`; mock data definitions never live inside UI components. This layer will be replaced by Prisma/PostgreSQL queries later without rewriting UI.
 - Social media links (Instagram, X, YouTube, Telegram) use inline stroke-style SVG icons defined in the project (`social-icons.tsx`). Lucide 1.41.0 no longer ships brand icons, so these were hand-drawn to match the stroke-based icon convention.
