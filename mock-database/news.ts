@@ -1,3 +1,9 @@
+export type NewsCategory =
+  | "FIGHTERS"
+  | "EVENTS"
+  | "ORGANIZATION"
+  | "RANKINGS";
+
 export interface MockNews {
   id: string;
   title: string;
@@ -7,6 +13,7 @@ export interface MockNews {
   imageUrl: string;
   publishedAt: string;
   isPopular: boolean;
+  category: NewsCategory;
 }
 
 export const news: MockNews[] = [
@@ -22,6 +29,7 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-08-23T09:00:00.000Z",
     isPopular: true,
+    category: "EVENTS",
   },
   {
     id: "nws-002",
@@ -35,6 +43,7 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1495555961986-6d4c1ecb7be3?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-09-01T14:00:00.000Z",
     isPopular: true,
+    category: "EVENTS",
   },
   {
     id: "nws-003",
@@ -48,6 +57,7 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-09-02T11:30:00.000Z",
     isPopular: false,
+    category: "FIGHTERS",
   },
   {
     id: "nws-004",
@@ -61,6 +71,7 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-08-28T16:00:00.000Z",
     isPopular: false,
+    category: "FIGHTERS",
   },
   {
     id: "nws-005",
@@ -74,6 +85,7 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1519861531473-9200262188bf?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-08-19T10:00:00.000Z",
     isPopular: true,
+    category: "FIGHTERS",
   },
   {
     id: "nws-006",
@@ -87,6 +99,7 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-07-30T13:00:00.000Z",
     isPopular: false,
+    category: "RANKINGS",
   },
   {
     id: "nws-007",
@@ -100,6 +113,7 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-06-15T08:00:00.000Z",
     isPopular: true,
+    category: "FIGHTERS",
   },
   {
     id: "nws-008",
@@ -113,5 +127,6 @@ export const news: MockNews[] = [
       "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1920&q=80",
     publishedAt: "2026-08-08T12:00:00.000Z",
     isPopular: false,
+    category: "ORGANIZATION",
   },
 ];
