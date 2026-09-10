@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const whoWeAreImage =
-  "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1920&q=80";
+  "";
 
 export function WhoWeAre() {
   return (

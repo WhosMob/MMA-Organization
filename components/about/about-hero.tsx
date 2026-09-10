@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 const heroImage =
-  "https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=1920&q=80";
+  "";
 
 export function AboutHero() {
   return (
