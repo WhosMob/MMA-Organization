@@ -32,7 +32,7 @@ function FighterCard({ fighter }: { fighter: MockFighter }) {
           </span>
         )}
 
-        <div className="absolute bottom-0 left-0 right-0 p-1.5 sm:p-3 lg:p-4">
+        <div className="absolute bottom-0 left-0 right-0 p-1.5 sm:p-3 lg:p-4 text-center sm:text-left">
           <h3 className="font-heading text-[10px] sm:text-sm lg:text-lg xl:text-xl font-bold uppercase tracking-tight leading-tight text-white">
             {fighter.name}
           </h3>
@@ -43,7 +43,7 @@ function FighterCard({ fighter }: { fighter: MockFighter }) {
       </div>
 
       <div className="p-1.5 sm:p-3 lg:p-4 space-y-1 sm:space-y-2">
-        <div className="flex items-center justify-between gap-1">
+        <div className="flex flex-col items-center sm:flex-row sm:items-center sm:justify-between gap-0.5 sm:gap-1">
           <span className="text-[7px] sm:text-[10px] lg:text-xs font-semibold uppercase tracking-wider text-accent-primary truncate">
             {fighter.weightClass}
           </span>
@@ -52,7 +52,7 @@ function FighterCard({ fighter }: { fighter: MockFighter }) {
           </span>
         </div>
 
-        <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+        <div className="flex items-center justify-center sm:justify-start gap-1 sm:gap-2 flex-wrap">
           {fighter.rankings.p4p !== null && (
             <span className="inline-flex items-center gap-1 rounded-md bg-accent-primary-dim px-1 py-px sm:px-1.5 sm:py-0.5 text-[6px] sm:text-[8px] lg:text-[10px] font-semibold uppercase tracking-wider text-accent-primary">
               P4P #{fighter.rankings.p4p}
