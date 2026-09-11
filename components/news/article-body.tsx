@@ -15,7 +15,7 @@ export function ArticleBody({ article }: { article: MockNews }) {
     .filter((paragraph) => paragraph.length > 0);
 
   return (
-    <article className="bg-base">
+    <article className="bg-page">
       <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
         <p
           className="border-l-2 border-accent-primary pl-4 text-lg font-medium leading-relaxed text-ink sm:text-xl"

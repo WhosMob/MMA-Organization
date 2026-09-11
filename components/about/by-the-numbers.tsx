@@ -39,7 +39,7 @@ export function ByTheNumbers({ stats }: { stats: AboutStats }) {
           {items.map((item) => (
             <div
               key={item.label}
-              className="flex flex-col items-center bg-base px-4 py-10 text-center sm:py-12"
+              className="flex flex-col items-center bg-page px-4 py-10 text-center sm:py-12"
             >
               <dd
                 className="order-1 font-heading text-5xl font-bold leading-none tracking-tight sm:text-6xl lg:text-7xl"

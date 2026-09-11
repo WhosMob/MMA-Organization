@@ -40,6 +40,24 @@ function RankingCard({
 }
 
 function FighterRankingsSection({ fighter }: { fighter: MockFighter }) {
+  const p4pRank = fighter.rankings.p4p;
+  const divisionRank = fighter.rankings.division;
+
+  const divisionCard = (
+    <RankingCard
+      label={`${fighter.weightClass} Division`}
+      displayValue={
+        divisionRank !== null
+          ? String(divisionRank)
+          : fighter.isChampion
+            ? "Champion"
+            : "Not Ranked"
+      }
+      accent={false}
+      isChampion={divisionRank === null && fighter.isChampion}
+    />
+  );
+
   return (
     <section className="py-12 md:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -53,30 +71,21 @@ function FighterRankingsSection({ fighter }: { fighter: MockFighter }) {
           </h2>
         </div>
 
-        <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
-          <RankingCard
-            label="Pound for Pound"
-            displayValue={
-              fighter.rankings.p4p !== null
-                ? String(fighter.rankings.p4p)
-                : "Not Ranked"
-            }
-            accent
-          />
-          <RankingCard
-            label={`${fighter.weightClass} Division`}
-            displayValue={
-              fighter.rankings.division !== null
-                ? String(fighter.rankings.division)
-                : fighter.isChampion
-                  ? "Champion"
-                  : "Not Ranked"
-            }
-            accent={false}
-            isChampion={
-              fighter.rankings.division === null && fighter.isChampion
-            }
-          />
+        <div
+          className={
+            p4pRank !== null
+              ? "grid gap-3 sm:gap-4 sm:grid-cols-2"
+              : "max-w-md"
+          }
+        >
+          {p4pRank !== null && (
+            <RankingCard
+              label="Pound for Pound"
+              displayValue={String(p4pRank)}
+              accent
+            />
+          )}
+          {divisionCard}
         </div>
       </div>
     </section>

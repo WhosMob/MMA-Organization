@@ -32,7 +32,7 @@ export function RelatedNews({
   if (related.length === 0) return null;
 
   return (
-    <section aria-labelledby="related-news-heading" className="bg-base">
+    <section aria-labelledby="related-news-heading" className="bg-page">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
         <div className="mb-8 space-y-2 md:mb-10">
           <p className="inline-flex w-fit items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent-primary">

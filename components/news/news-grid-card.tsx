@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Calendar } from "lucide-react";
+import { Calendar, Tag } from "lucide-react";
 import type { MockNews } from "@/mock-database/news";
 
 function formatDate(iso: string) {
@@ -27,7 +27,8 @@ export function NewsGridCard({ article }: { article: MockNews }) {
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        <span className="absolute left-3 top-3 inline-flex items-center rounded-full border border-line-subtle bg-black/40 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wider text-ink-secondary backdrop-blur-sm">
+        <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full border border-line-subtle bg-black/40 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-wider text-white backdrop-blur-sm">
+          <Tag className="size-3" />
           {article.category}
         </span>
       </div>

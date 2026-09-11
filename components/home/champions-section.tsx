@@ -17,7 +17,7 @@ function ChampionCard({ champion }: { champion: MockFighter }) {
   return (
     <Link
       href={`/fighters/${champion.id}`}
-      className="group relative flex flex-col items-center gap-1 p-2 sm:p-3 lg:p-6 rounded-lg bg-surface border border-line-subtle transition-all hover:bg-elevated hover:border-line hover:shadow-lg"
+      className="group relative flex min-w-0 flex-col items-center gap-1 p-2 sm:p-3 lg:p-6 rounded-lg bg-surface border border-line-subtle transition-all hover:bg-elevated hover:border-line hover:shadow-lg"
     >
       <div className="relative w-full aspect-[3/4] sm:aspect-square overflow-hidden rounded-lg bg-elevated">
         {champion.imageUrl ? (
@@ -36,15 +36,18 @@ function ChampionCard({ champion }: { champion: MockFighter }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
       </div>
 
-      <div className="text-center space-y-0.5 sm:space-y-1">
-        <p className="text-[8px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-accent-primary">
+      <div className="w-full min-w-0 text-center space-y-0.5 sm:space-y-1">
+        <p
+          title={champion.weightClass}
+          className="w-full truncate whitespace-nowrap overflow-hidden text-[8px] sm:text-xs font-semibold uppercase tracking-[0.15em] sm:tracking-[0.2em] text-accent-primary"
+        >
           {champion.weightClass}
         </p>
-        <h3 className="font-heading text-[10px] sm:text-base lg:text-xl font-bold uppercase tracking-tight group-hover:text-accent-primary transition-colors leading-tight" style={{ color: "var(--text-primary)" }}>
+        <h3 title={champion.name} className="w-full truncate whitespace-nowrap overflow-hidden font-heading text-[10px] sm:text-base lg:text-xl font-bold uppercase tracking-tight group-hover:text-accent-primary transition-colors leading-tight" style={{ color: "var(--text-primary)" }}>
           {champion.name}
         </h3>
         {champion.nickname && (
-          <p className="text-[8px] sm:text-sm text-ink-muted leading-tight">&ldquo;{champion.nickname}&rdquo;</p>
+          <p title={champion.nickname} className="w-full truncate whitespace-nowrap overflow-hidden text-[8px] sm:text-sm text-ink-muted leading-tight">&ldquo;{champion.nickname}&rdquo;</p>
         )}
       </div>
     </Link>

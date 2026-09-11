@@ -25,7 +25,7 @@ export function Navbar() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-line bg-base/80 backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b border-line bg-page/80 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Logo />
         <nav className="hidden items-center gap-1 md:flex">
@@ -60,7 +60,7 @@ export function Navbar() {
       </div>
 
       {open && (
-        <nav className="border-t border-line bg-base px-4 pb-4 pt-2 md:hidden">
+        <nav className="border-t border-line bg-page px-4 pb-4 pt-2 md:hidden">
           {links.map((link) => (
             <Link
               key={link.href}

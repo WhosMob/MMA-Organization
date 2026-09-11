@@ -1,6 +1,7 @@
-import { ArrowLeftRight, Cake, CalendarDays, Globe, Ruler } from "lucide-react";
+import { ArrowLeftRight, Cake, CalendarDays, Globe, Ruler, Weight } from "lucide-react";
 import type { ReactNode } from "react";
 import { calculateAge } from "@/lib/calculate-age";
+import { getWeightLimit } from "@/lib/fighters";
 import type { MockFighter } from "@/mock-database/fighters";
 
 type InfoItemProps = {
@@ -37,7 +38,7 @@ function FighterInformationSection({ fighter }: { fighter: MockFighter }) {
           </h2>
         </div>
 
-        <dl className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
+        <dl className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
           <InfoItem
             icon={<Globe className="size-4" />}
             label="Nationality"
@@ -52,6 +53,11 @@ function FighterInformationSection({ fighter }: { fighter: MockFighter }) {
             icon={<Cake className="size-4" />}
             label="Age"
             value={`${calculateAge(fighter.dateOfBirth)} years`}
+          />
+          <InfoItem
+            icon={<Weight className="size-4" />}
+            label="Weight"
+            value={getWeightLimit(fighter.weightClass)}
           />
           <InfoItem
             icon={<Ruler className="size-4" />}

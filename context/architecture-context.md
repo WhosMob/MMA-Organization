@@ -117,6 +117,7 @@ Featherweight
 Bantamweight
 Flyweight
 Weight classes are represented as a dedicated database entity so fighters, fights, rankings, and championships can reference the same canonical division.
+Each weight class has a canonical weight limit, surfaced on fighter profiles (e.g., the Fighter Information "Weight" stat). The limit belongs to the weight class, not the individual fighter, so it lives beside the canonical division definition rather than on the fighter record.
 Fights
 A Fight represents a matchup between two fighters.
 A fight is associated with:
