@@ -65,7 +65,7 @@ Split an implementation step if it combines:
 - Multiple unrelated pages.
 - Multiple unrelated database domains.
 - UI work and unrelated backend work.
-- Multiple unrelated Route Handlers.
+- Multiple unrelated backend endpoints.
 - Database schema changes and unrelated UI changes.
 - Several independent interactive systems.
 - Behavior that is not clearly defined in the context files.
@@ -88,7 +88,8 @@ When working with technologies whose APIs or conventions may have changed, verif
 This is especially important for:
 
 - Next.js
-- Prisma
+- Django
+- Django REST Framework
 - Next.js APIs
 - Tailwind CSS
 - shadcn/ui
@@ -136,19 +137,29 @@ Before adding "use client":
 
 1. Determine whether browser-side interactivity is actually required.
 2. Check whether the interactive behavior can be isolated into a smaller Client Component.
-3. Keep database access on the server.
+3. Keep database access out of the frontend; the backend (Django) owns all database access.
 
 Do not convert an entire page to a Client Component simply because one section requires interactivity.
 
-## Database and Prisma Workflow
+## Backend and Database Workflow
 
-When modifying the database:
+The backend has NOT been implemented yet. It will be a separate Django / Django REST Framework application using PostgreSQL through the Django ORM. During the mock-data phase, data comes from `mock-database/` via `lib/` helpers.
+
+Rules for AI agents:
+
+- Do NOT introduce Prisma, a Prisma schema, or Prisma client code. Prisma is not part of this project.
+- Do NOT create Next.js Route Handlers or Server Actions to act as the backend/API.
+- Do NOT create Django projects, Django apps, or database schemas unless the backend phase has explicitly been started (see progress-tracker.md).
+- Do NOT install backend dependencies (Django, Django REST Framework, PostgreSQL drivers) during frontend/mock-data work.
+- When the frontend needs real API access (in the future backend phase), use TanStack Query + Axios against the Django REST API.
+
+When modifying the database schema (backend phase only):
 
 1. Read the relevant architecture and data-model requirements.
-2. Inspect the current Prisma schema.
+2. Inspect the current Django models.
 3. Make the smallest necessary schema change.
-4. Run the appropriate Prisma validation/migration workflow.
-5. Verify affected queries and pages.
+4. Run the appropriate Django migration workflow.
+5. Verify affected API endpoints and pages.
 6. Update architecture-context.md if the domain model or architectural decision changes.
 7. Update progress-tracker.md.
 

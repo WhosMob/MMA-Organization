@@ -2,84 +2,122 @@
 
 ## Stack
 
+### Current Development Stage
+
 | Layer | Technology | Role |
 | ---------------- | ----------------------- | -------------------------------------------------------------- |
-| Framework | Next.js 16 + TypeScript | Full-stack application with server/client boundaries |
+| Framework | Next.js 16 + TypeScript | Frontend application: pages, layouts, components, rendering |
 | UI | Tailwind CSS + shadcn/ui | Component composition and styling |
-| Database | PostgreSQL | Relational storage for MMA organization data |
-| ORM | Prisma | Database schema, migrations, and type-safe database access |
+| Data source | Mock Database (`mock-database/`) | Temporary development data; not part of production architecture |
 | Images | External image URLs | Image references stored as URLs rather than uploaded files |
+
+### Planned Production Architecture (Future Phase — Not Implemented)
+
+```text
+Next.js 16 (frontend)
+        ↓
+TanStack Query + Axios
+        ↓
+Django REST API (separate backend application)
+        ↓
+PostgreSQL
+```
+
+| Layer | Technology | Role |
+| ---------------- | ----------------------- | -------------------------------------------------------------- |
+| Frontend framework | Next.js 16 + TypeScript | Frontend UI, pages, layouts, components, rendering |
+| Server-state management | TanStack Query | Fetching, caching, refetching, mutations, loading/error states |
+| HTTP client | Axios | HTTP communication between Next.js and the Django API |
+| Backend framework | Django | Backend application: business logic, validation, data access |
+| API layer | Django REST Framework (DRF) | REST API endpoints consumed by the frontend |
+| Database access | Django ORM | Backend database access layer |
+| Database | PostgreSQL | Persistent production data storage |
+| Images | External image URLs | Image references stored as URLs rather than uploaded files |
+
+Prisma was the previously planned ORM/database access layer; that plan has been replaced by Django + Django REST Framework. Do not introduce Prisma or a Next.js-based backend.
+
+Django implementation has NOT started. During the current development stage the frontend still reads from the mock database.
+
+## Separation of Responsibilities
+
+- **Next.js** — frontend UI: pages, layouts, components, client-side interactions, frontend rendering, and consuming backend APIs.
+- **TanStack Query** — server-state management on the frontend: fetching backend data, caching, loading/error states, refetching, and mutations.
+- **Axios** — HTTP communication between Next.js and Django.
+- **Django / Django REST Framework** — the backend/API: business logic, authentication/authorization when introduced, data validation, and database interaction through the Django ORM.
+- **PostgreSQL** — persistent application data.
+
+The backend is a separate Django application, not a Next.js backend. Next.js Route Handlers and Server Actions are not the main backend/API.
 
 ## System Boundaries
 
-- app — Next.js routes, layouts, pages, and route-specific application logic.
-- app/api — Route handlers for cases that require an HTTP API boundary. Do not create API routes when direct server-side data access is sufficient.
+- app — Next.js routes, layouts, and pages (frontend only).
 - components — Reusable UI components and interactive client-side elements.
-- lib — Shared infrastructure, Prisma client, database utilities, and reusable application logic.
-- prisma — Prisma schema, migrations, and generated database client.
+- lib — Shared frontend infrastructure, data-access helpers, and reusable application logic.
+- mock-database — Temporary mock data modules used during the current development stage.
 - public — Static application assets that are part of the codebase.
 - context — Project-level documentation and AI development rules. Context files are not application runtime code.
 
+The Django backend will live in a separate application and is not part of the current Next.js codebase.
+
 ## Application Architecture
 
-The application follows a full-stack Next.js architecture.
+During the current development stage, the application is a Next.js 16 frontend that reads from the mock database through server-side data-access helpers in `lib/`.
 
-The frontend and backend are part of the same Next.js application.
+In the planned production architecture, Next.js is the frontend only. The frontend talks to a separate Django REST API over HTTP using TanStack Query + Axios. Django owns the backend: business logic, validation, authentication/authorization (when introduced), and PostgreSQL access through the Django ORM.
 
-Server-side code is responsible for database access and other operations that should not be exposed to the browser.
+Client Components are used only when browser-side interactivity or client-side state is required.
 
-Client components are used only when browser-side interactivity or client-side state is required.
-
-The application should prefer server-side data fetching when the data does not require client-side interactivity.
-
-Database access should not be performed directly from Client Components.
-
-The Prisma client should be used from server-side code only.
+Client Components must not access any database directly; all database access happens in the Django backend.
 
 ## Data Flow
 
-The standard data flow is:
+### Current Development Stage
 
-`text
+```text
 Next.js Page / Server Component
             ↓
-       Server-side logic
+   lib/ data-access helper
             ↓
-          Prisma
-            ↓
-       PostgreSQL
-            ↓
-          Prisma
-            ↓
-       Server Component
+      Mock Database
             ↓
         UI rendering
+```
 
+### Planned Production Architecture (Not Implemented Yet)
 
-        For interactive operations that require an HTTP boundary:
-        Client Component
-      ↓
-  Route Handler
-      ↓
-Server-side logic
-      ↓
-    Prisma
-      ↓
- PostgreSQL
+```text
+Next.js Page / Component
+            ↓
+   TanStack Query (server-state management)
+            ↓
+      Axios (HTTP)
+            ↓
+ Django REST API (DRF)
+            ↓
+     Django ORM
+            ↓
+      PostgreSQL
+            ↓
+ response flows back: DRF → Axios → TanStack Query → UI rendering
+```
 
+Do not introduce Next.js Route Handlers or Server Actions as the primary backend; the Django REST API is the backend. Do not introduce an API layer purely for architectural appearance.
 
+## Database Architecture
 
+PostgreSQL is the planned persistent production data store.
 
-
- Do not introduce an API layer purely for architectural appearance. Use Route Handlers when an actual HTTP endpoint is useful or required.
-Database Architecture
-PostgreSQL is the primary persistent data store.
 The database uses a relational model because the application's core data has strong relationships between fighters, fights, events, rankings, championships, weight classes, and news.
-Prisma is used as the ORM and provides:
-Database schema definition.
-Type-safe database queries.
-Database migrations.
-Generated TypeScript types and database client.
+
+The backend will access the database through the Django ORM, which provides:
+
+- Database schema definition.
+- Database migrations.
+- Data validation.
+- Relational queries.
+
+Prisma is not used and is not part of the planned architecture.
+
 The initial core entities are:
 Fighter
 WeightClass
@@ -201,12 +239,12 @@ imageUrl
 The architecture should allow dedicated image storage to be introduced later without requiring major changes to the core domain model.
 Data Management
 The initial version does not include an Admin Panel.
-Data is managed directly through PostgreSQL during development.
+During the current mock-data phase, data is managed directly in the mock database; once the backend exists, data is managed directly through PostgreSQL during development.
 There is no authentication or authorization requirement for the initial public-facing version.
 Administrative interfaces, authentication, and protected data-management workflows can be introduced later if the project requires them.
 Rendering Strategy
 Use the appropriate Next.js rendering strategy based on the nature of the page and its data.
-Pages that primarily display database-backed content should prefer server-side data fetching.
+During the current mock-data phase, pages that primarily display data-backed content should prefer server-side data fetching through `lib/` helpers. When the Django API is introduced, data fetching will move to TanStack Query as described in the Data Flow section.
 Client Components should be limited to interactive functionality such as:
 Carousels
 Search interactions when client-side behavior is required
@@ -220,14 +258,14 @@ The application uses slug-based dynamic routes for entity detail pages.
 /events/[event-slug]
 /news/[news-slug]
 Slugs should be stable, URL-friendly, and unique within their entity type.
-Detail pages use the slug to retrieve the corresponding database record.
+Detail pages use the slug to retrieve the corresponding data record.
 System Invariants
-PostgreSQL is the source of truth for persistent MMA organization data.
-Prisma is the application's database access layer.
-Prisma database access must remain on the server.
-Client Components must not access PostgreSQL directly.
-Do not introduce an API layer when direct server-side data access is sufficient.
-Route Handlers should only be introduced when an HTTP API boundary is actually required.
+PostgreSQL is the source of truth for persistent MMA organization data (planned production database).
+The Django REST API is the application's backend; Django owns all database access through the Django ORM.
+Prisma must not be used anywhere in the project.
+Client Components must not access any database directly.
+The current Next.js application must not become the backend: Next.js Route Handlers and Server Actions are not the primary API/backend layer.
+During the mock-data phase, data is read through server-side `lib/` helpers from `mock-database/`.
 Current ranking data is stored without ranking history.
 Fighter age is derived from date of birth rather than stored independently.
 Weight classes are canonical database entities and should not be duplicated as arbitrary strings across related records.
@@ -246,7 +284,7 @@ Architecture changes must be reflected in this file before implementation contin
 
 During the initial UI development phase, pages and components may use local mock data.
 
-Mock data is temporary development data used to build and verify the UI before the PostgreSQL database is connected.
+Mock data is temporary development data used to build and verify the UI before the Django API and PostgreSQL are connected.
 
 All mock data must be kept separate from UI components and organized inside a dedicated mock-database/ directory.
 
@@ -254,21 +292,21 @@ The mock-database/ directory should contain mock data modules organized by the p
 
 Example structure:
 
-`text
+```text
 mock-database/
 ├── fighters.ts
 ├── events.ts
 ├── fights.ts
-├── rankings.ts
 └── news.ts
+```
 
 
-The mock database should represent the same general domain structure that will later be provided by PostgreSQL and Prisma.
+The mock database should represent the same general domain structure that will later be provided by the Django REST API and PostgreSQL.
 UI components and pages may consume data from the mock database during the initial UI development phase, but they must not contain the mock data definitions themselves.
-The intended production data flow remains:
-Next.js ↓ Server-side logic ↓ Prisma ↓ PostgreSQL
+The intended production data flow is:
+Next.js ↓ TanStack Query + Axios ↓ Django REST API ↓ Django ORM ↓ PostgreSQL
 The mock database is a temporary development layer and is not part of the production data architecture.
-When the database layer is implemented, mock data should be replaced by the appropriate server-side Prisma queries without unnecessarily rewriting the UI components.
-Do not introduce PostgreSQL or Prisma database queries into a feature solely because PostgreSQL and Prisma are part of the final project stack.
+When the Django API is implemented, mock data should be replaced by frontend data fetching through TanStack Query + Axios against the Django REST API, without unnecessarily rewriting the UI components.
+Do not introduce PostgreSQL, Prisma, or Django database queries into a feature solely because they are part of the final project stack.
 Follow the current implementation phase defined in progress-tracker.md.
-When the project moves from the mock-data phase to the database phase, update the relevant context files and replace the mock database with the appropriate Prisma/PostgreSQL data access layer.
+When the project moves from the mock-data phase to the backend phase, update the relevant context files and replace the mock database with TanStack Query + Axios calls to the Django REST API.

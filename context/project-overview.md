@@ -8,7 +8,7 @@ The platform presents the organization's fighters, rankings, events, fight cards
 
 The website is designed to feel like a serious MMA promotion while maintaining its own distinct visual identity rather than directly copying an existing organization.
 
-The application is built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and Prisma. Next.js is responsible for both the frontend and backend application layer, while PostgreSQL provides persistent relational data storage through Prisma.
+The frontend is built with Next.js 16, TypeScript, and Tailwind CSS. The planned backend is a separate Django / Django REST Framework application backed by PostgreSQL, which the frontend will consume over HTTP using TanStack Query + Axios. During the current development stage the frontend uses a temporary mock database; Django has not been implemented yet.
 
 ## Goals
 
@@ -156,10 +156,38 @@ The application is built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and
 
 ## Data and Backend
 
+### Architecture Overview
+
+The project has two defined states:
+
+**Current state (development stage):**
+
+```text
+Next.js 16
+   ↓
+Mock Database
+```
+
+The frontend reads from the temporary mock database in `mock-database/`. No real backend exists yet.
+
+**Planned future state:**
+
+```text
+Next.js 16 (frontend)
+        ↓
+TanStack Query + Axios
+        ↓
+Django REST API (separate backend application)
+        ↓
+PostgreSQL
+```
+
+Django implementation has NOT started. The current project continues to use the mock database.
+
 ### Database
 
-- PostgreSQL is the primary database.
-- Prisma is used as the ORM and database access layer.
+- PostgreSQL is the planned production database.
+- The backend will access the database through the Django ORM.
 - The data model is relational and centered around fighters, fights, events, weight classes, rankings, championships, and news.
 
 ### Core Entities
@@ -185,7 +213,7 @@ The application is built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and
 ### Data Management
 
 - The initial version does not include an admin panel.
-- Data is managed directly through the database during development.
+- During the current mock-data phase, data is managed directly in the mock database; once the backend exists, data is managed directly through the database during development.
 - Authentication and administrative interfaces are not required for the initial public version.
 - Ranking history is not stored.
 - Only current ranking positions are required.
@@ -212,9 +240,9 @@ The application is built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and
 - About page.
 - Contact page.
 - Global navbar and footer.
-- PostgreSQL database.
-- Prisma ORM.
-- Next.js backend functionality.
+- PostgreSQL database (planned production database).
+- Django + Django REST Framework backend (planned future phase, not yet implemented).
+- TanStack Query + Axios frontend data-fetching layer (planned for when the Django API exists).
 - Relational data model for MMA entities.
 - External image URLs.
 
@@ -246,5 +274,5 @@ The application is built with Next.js, TypeScript, Tailwind CSS, PostgreSQL, and
 8. Visitors can browse popular and latest news and read individual articles.
 9. The organization's story, values, contact information, and social media are clearly accessible.
 10. MMA-related data is stored using a structured PostgreSQL relational database.
-11. Prisma provides a clear and maintainable database access layer.
+11. Django REST Framework provides a clear and maintainable REST API and database access layer through the Django ORM.
 12. The application architecture is structured so future backend and administrative features can be added without requiring a major rewrite.

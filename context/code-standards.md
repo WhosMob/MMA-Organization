@@ -20,7 +20,7 @@
 - Do not use type assertions to hide type errors unless the assertion is genuinely justified.
 - Validate unknown external input before trusting it.
 - Use proper nullable types when a value may legitimately be absent.
-- Keep domain types consistent with the Prisma data model.
+- Keep domain types consistent with the project's domain data model.
 - Prefer readable types over overly complex generic abstractions.
 
 ## Next.js
@@ -34,23 +34,20 @@
   - Client-side interactivity
 - Keep Client Components as small and isolated as practical.
 - Do not make an entire page a Client Component when only a small part requires interactivity.
-- Prefer server-side data fetching for database-backed pages.
-- Prisma must only be used from server-side code.
-- Do not access the database directly from Client Components.
+- Prefer server-side data fetching for data-backed pages during the mock-data phase.
+- Do not access any database directly from Client Components.
+- Do not introduce Prisma, Next.js Route Handlers, or Next.js Server Actions as the backend. The planned backend is a separate Django REST API.
+- When the Django API is introduced, frontend data fetching will use TanStack Query + Axios.
 - Use dynamic routes for entity detail pages where appropriate:
   - /fighters/[fighter-slug]
   - /events/[event-slug]
   - /news/[news-slug]
-- Use Route Handlers only when an actual HTTP API boundary is required.
-- Do not create API routes simply to fetch data between Server Components and the database.
-- Keep route handlers focused on a single responsibility.
-- Keep database and domain logic outside route handlers when it becomes non-trivial.
 
-## Data and Prisma
+## Data and Backend
 
-- PostgreSQL is the source of truth for persistent application data.
-- Prisma is the application's database access layer.
-- Prisma access must remain on the server.
+- PostgreSQL is the planned production source of truth for persistent application data.
+- The Django REST API is the application's backend; database access happens there through the Django ORM.
+- Prisma must not be used.
 - Use relational fields and foreign keys for relationships between domain entities.
 - Do not duplicate relational data as arbitrary strings when a proper relation exists.
 - Keep database queries focused and explicit.
@@ -67,8 +64,8 @@
 
 - Validate external or untrusted input at the system boundary.
 - Do not assume URL parameters, search parameters, form values, or request bodies are valid.
-- Validate dynamic route parameters before using them in database queries.
-- Validate Route Handler request bodies before processing them.
+- Validate dynamic route parameters before using them to look up data.
+- Validate request payloads before processing them (backend validation belongs in Django when the API exists).
 - Handle missing or invalid records explicitly.
 - Do not rely on client-side validation alone when server-side validation is required.
 
@@ -111,18 +108,16 @@ Typical examples include:
 - Swipe interactions
 - UI controls requiring browser events
 
-Client Components must not access Prisma or PostgreSQL directly.
+Client Components must not access any database directly.
 
-## API Routes
+## Backend API
 
-- Route Handlers should only be created when an HTTP endpoint is actually required.
-- Validate and parse request input before executing application logic.
-- Keep Route Handlers thin.
-- Move non-trivial business logic into shared server-side modules.
-- Return predictable response structures.
-- Handle expected errors explicitly.
+- The backend is a separate Django REST Framework application; Next.js is the frontend only.
+- Do not create Next.js Route Handlers or Server Actions to serve as the main backend or API.
+- Do not add backend endpoints, Django code, or database schemas until the backend phase is explicitly started (see progress-tracker.md).
+- When the Django API exists, the frontend will consume it through TanStack Query + Axios.
+- API responses should be predictable and errors handled explicitly.
 - Do not expose internal database errors directly to clients.
-- Do not create duplicate API endpoints for data that can be fetched directly by Server Components.
 
 ## Error Handling
 
@@ -139,8 +134,6 @@ Use responsibility-based file organization.
 
 `text
 app/
-├── api/
-│   └── ...
 ├── fighters/
 ├── events/
 ├── news/
@@ -158,12 +151,13 @@ components/
 └── ...
 
 lib/
-├── prisma/
 ├── ...
-    
-prisma/
-├── schema.prisma
-└── migrations/
+
+mock-database/
+├── fighters.ts
+├── events.ts
+├── fights.ts
+└── news.ts
 
 context/
 ├── AGENTS.md
@@ -177,8 +171,8 @@ context/
 app/ — routes, pages, layouts, and route-specific composition.
 components/ — reusable UI components.
 components/ui/ — shadcn/ui and reusable primitive UI components.
-lib/ — shared server-side infrastructure, Prisma access, utilities, and reusable application logic.
-prisma/ — Prisma schema, migrations, and database-related configuration.
+lib/ — shared frontend infrastructure, data-access helpers over the mock database, and reusable application logic.
+mock-database/ — temporary mock data modules (current development phase only).
 public/ — static assets included in the application.
 context/ — project documentation and AI development rules.
 Name files according to the responsibility they contain rather than the technology used to implement them.
@@ -189,13 +183,13 @@ Use kebab-case for route slugs.
 Use descriptive names that communicate responsibility.
 Avoid generic names such as data, helper, utils2, or thing when a more specific name is possible.
 Use consistent naming for domain concepts across the application.
-Database Queries
-Keep Prisma queries close to the server-side logic responsible for the data.
+Data Access
+During the mock-data phase, keep data-access logic in `lib/` helpers that read from `mock-database/`; UI components consume the helpers and must not contain data definitions themselves.
 Avoid fetching large amounts of unrelated data.
-Prefer explicit select or include configurations when they improve clarity or performance.
-Avoid unnecessary database requests.
-Do not duplicate the same complex query logic across multiple pages.
-Shared or repeated query logic should be extracted into an appropriate server-side module.
+Avoid unnecessary data requests.
+Do not duplicate the same complex query or derivation logic across multiple pages.
+Shared or repeated data-access logic should be extracted into an appropriate `lib/` module.
+When the Django API is introduced, frontend data fetching will use TanStack Query + Axios instead of direct data-module access.
 Images
 Use external image URLs as defined by the data model.
 Do not introduce image upload or storage infrastructure unless the project requires it.
