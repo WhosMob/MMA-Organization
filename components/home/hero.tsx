@@ -1,17 +1,16 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
 export function Hero() {
   return (
     <section className="relative flex min-h-[calc(100vh-4rem)] w-full items-center overflow-hidden bg-page">
-      <Image
-        src=""
-        alt=""
-        fill
-        priority
-        sizes="100vw"
-        className="object-cover opacity-40"
+      <video
+        src="/gif.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 h-full w-full object-cover opacity-17.5"
       />
       <div className="absolute inset-0 bg-linear-to-r from-base via-base/80 to-base/40" />
 
